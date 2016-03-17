@@ -26,7 +26,7 @@ fsteps <- na.omit(steps)
 ```r
 library(ggplot2)
 dailySteps<-aggregate(steps ~ date, steps, FUN=sum)
-ggplot(dailySteps, aes(date, steps)) + geom_bar(stat="identity")
+hist(dailySteps$steps)
 ```
 
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png)
@@ -100,7 +100,7 @@ Histogram after replacement:
 
 ```r
 dailySteps2<-aggregate(steps ~ date, steps, FUN=sum)
-ggplot(dailySteps2, aes(date, steps)) + geom_bar(stat="identity")
+hist(dailySteps2$steps)
 ```
 
 ![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png)
@@ -155,3 +155,4 @@ ggplot(dailyStepsDayType, aes(interval, steps)) + geom_line(colour="blue") + fac
 
 ![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png)
 
+There are differences between weekday and weekend activities.

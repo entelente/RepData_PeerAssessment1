@@ -24,7 +24,7 @@ fsteps <- na.omit(steps)
 ```{r, echo=TRUE}
 library(ggplot2)
 dailySteps<-aggregate(steps ~ date, steps, FUN=sum)
-ggplot(dailySteps, aes(date, steps)) + geom_bar(stat="identity")
+hist(dailySteps$steps)
 ```
 
 Mean total number of steps taken per day
@@ -70,7 +70,7 @@ for(row in 1:nrow(steps)) {
 Histogram after replacement:
 ```{r, echo=TRUE}
 dailySteps2<-aggregate(steps ~ date, steps, FUN=sum)
-ggplot(dailySteps2, aes(date, steps)) + geom_bar(stat="identity")
+hist(dailySteps2$steps)
 ```
 
 Comparing mean and median before and after imputing:
@@ -96,3 +96,4 @@ dailyStepsDayType <- aggregate(steps ~ interval + dayType, steps, FUN=mean)
 ggplot(dailyStepsDayType, aes(interval, steps)) + geom_line(colour="blue") + facet_grid(dayType ~ .)
 ```
 
+There are differences between weekday and weekend activities.
