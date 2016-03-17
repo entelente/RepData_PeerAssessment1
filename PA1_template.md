@@ -9,7 +9,8 @@ output:
 
 
 ## Loading and preprocessing the data
-```{r, echo=TRUE}
+
+```r
 # Loading data file
 steps<-read.csv("activity.csv")
 # Convert date column to date type
@@ -21,33 +22,55 @@ fsteps <- na.omit(steps)
 
 
 ## What is mean total number of steps taken per day?
-```{r, echo=TRUE}
+
+```r
 library(ggplot2)
 dailySteps<-aggregate(steps ~ date, steps, FUN=sum)
 ggplot(dailySteps, aes(date, steps)) + geom_bar(stat="identity")
 ```
 
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png)
+
 Mean total number of steps taken per day
-```{r, echo=TRUE}
+
+```r
 mean(dailySteps$steps)
 ```
+
+```
+## [1] 10766.19
+```
 Median total number of steps taken per day
-```{r, echo=TRUE}
+
+```r
 median(dailySteps$steps)
+```
+
+```
+## [1] 10765
 ```
 
 
 
 
 ## What is the average daily activity pattern?
-```{r, echo=TRUE}
+
+```r
 avgStepsInInterval<-aggregate(steps ~ interval, steps, FUN=mean)
 ggplot(avgStepsInInterval, aes(interval, steps)) + geom_line()
 ```
 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png)
+
 Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
-```{r, echo=TRUE}
+
+```r
 avgStepsInInterval[which.max(avgStepsInInterval$steps),]
+```
+
+```
+##     interval    steps
+## 104      835 206.1698
 ```
 
 
@@ -56,11 +79,17 @@ avgStepsInInterval[which.max(avgStepsInInterval$steps),]
 There are a number of days/intervals where there are missing values (coded as NA). The presence of missing days may introduce bias into some calculations or summaries of the data.
 
 Total number of missing values in the dataset (i.e. the total number of rows with NAs):
-```{r, echo=TRUE}
+
+```r
 nrow(steps) - nrow(fsteps)
 ```
+
+```
+## [1] 2304
+```
 To replace the missing values of the orioginal dataset I choose to use the mean of the actual time interval.
-```{r, echo=TRUE}
+
+```r
 for(row in 1:nrow(steps)) {
   if(is.na(steps$steps[row])) {
     steps$steps[row]<-avgStepsInInterval[avgStepsInInterval$interval==steps$interval[row],]$steps
@@ -68,31 +97,61 @@ for(row in 1:nrow(steps)) {
 }
 ```
 Histogram after replacement:
-```{r, echo=TRUE}
+
+```r
 dailySteps2<-aggregate(steps ~ date, steps, FUN=sum)
 ggplot(dailySteps2, aes(date, steps)) + geom_bar(stat="identity")
 ```
 
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png)
+
 Comparing mean and median before and after imputing:
 
 Mean change:
-```{r, echo=TRUE}
+
+```r
 mean(dailySteps$steps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 mean(dailySteps2$steps)
 ```
+
+```
+## [1] 10766.19
+```
 Median change:
-```{r, echo=TRUE}
+
+```r
 median(dailySteps$steps)
+```
+
+```
+## [1] 10765
+```
+
+```r
 median(dailySteps2$steps)
+```
+
+```
+## [1] 10766.19
 ```
 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r, echo=TRUE}
+
+```r
 steps$dayType<-weekdays(steps$date)
 steps$dayType<-sapply(steps$dayType, function(x) if(x=="Sunday" | x=="Saturday") "weekend" else "weekday")
 dailyStepsDayType <- aggregate(steps ~ interval + dayType, steps, FUN=mean)
 ggplot(dailyStepsDayType, aes(interval, steps)) + geom_line(colour="blue") + facet_grid(dayType ~ .)
 ```
+
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png)
 
